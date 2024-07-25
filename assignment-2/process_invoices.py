@@ -36,7 +36,7 @@ except ModuleNotFoundError:
 invoices_data = []
 
 # Directory containing the invoices
-invoices_dir = 'invoices/'
+invoices_dir = 'assignment-2/invoices/'
 
 print("Starting to process invoices...")
 
@@ -62,11 +62,15 @@ for filename in tqdm(os.listdir(invoices_dir)):
         for paragraph in doc.paragraphs:
             text = paragraph.text.strip()
             if text.startswith("SUBTOTAL:"):
-                subtotal = float(text.split('SUBTOTAL:')[1].split()[0])
-            elif text.startswith("TAX:"):
-                tax = float(text.split('TAX:')[1].split()[0])
-            elif text.startswith("TOTAL:"):
-                total = float(text.split('TOTAL:')[1].split()[0])
+                value_lines = text.strip().split('\n')
+                for line in value_lines:
+                    if ':' in line:
+                        if line.startswith("SUBTOTAL:"):
+                            subtotal = float(line.split('SUBTOTAL:')[1].split()[0])
+                        elif line.startswith("TAX:"):
+                            tax = float(line.split('TAX:')[1].split()[0])
+                        elif line.startswith("TOTAL:"):
+                            total = float(line.split('TOTAL:')[1].split()[0])
         
         # Append extracted data to the list
         invoices_data.append([invoice_id, product_count, subtotal, tax, total])
@@ -75,7 +79,7 @@ for filename in tqdm(os.listdir(invoices_dir)):
 df = pd.DataFrame(invoices_data, columns=['Invoice ID', 'Total Products Purchased', 'Subtotal', 'Tax', 'Total'])
 
 # Save the DataFrame to an Excel file
-output_path = 'compiled_invoices.xlsx'
+output_path = 'assignment-2/compiled_invoices.xlsx'
 df.to_excel(output_path, index=False)
 
 print("Invoices have been successfully processed and saved to", output_path)
