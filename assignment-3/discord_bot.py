@@ -61,11 +61,11 @@ async def on_ready():
             writer = csv.writer(file)
             writer.writerow(['ID', 'Name', 'Join Date'])
 
-        # Users already registered
-        for guild in bot.guilds:
-            for member in guild.members:
-                if not member.bot:
-                    write_to_csv(member, datetime.utcnow())
+    # Users already registered
+    for guild in bot.guilds:
+        for member in guild.members:
+            if not member.bot:
+                write_to_csv(member, datetime.utcnow())
 
 @bot.event
 async def on_member_join(member):
